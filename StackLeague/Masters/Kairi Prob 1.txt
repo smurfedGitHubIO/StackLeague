@@ -1,0 +1,49 @@
+It's time for Kairi's Computer Science class! Their CS Teacher, Ma'am Liselotte, gave them a sussy-looking pseudocode:
+
+global v0, s0, s1
+
+main():
+	set_values v0 = 0
+	set_values s0, s1 = int(input()), int(input())
+	perform fxn1()
+	set_values t0 = v0
+	perform exit(t0)
+	return
+fxn1():
+	is_equal s1 and 0:
+		perform zero()
+	is_equal s1 and 1:
+		perform one()
+	else:
+		perform start()
+	return
+zero():
+	set_values v0 = 1
+	perform done()
+	return
+one():
+	set_values v0 = s0
+	perform done()
+	return
+start():
+	set_values t0 = (s1&1)
+	is_equal t0 and 1:
+		perform odd()
+	set_values s1 = (s1>>1)
+	perform fxn1()
+	set_values t1 = v0*v0
+	perform done(t1)
+	return
+odd():
+	set_values s1 = s1-1
+	perform fxn1()
+	set_values s1 = s1-1
+	return
+done():
+	set_values v0 = s0
+	return
+exit(input[0]):
+	print input[0]
+	return
+
+Kairi seemed to be having a really hard time knowing what the code does so she asks you to help her out on this problem. Given a pair of inputs, return a value that is equivalent to the value returned by running the pseudocode above.
