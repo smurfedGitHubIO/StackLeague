@@ -1,0 +1,71 @@
+Kairi and The Ant Problem
+
+It's lunch time and Kairi is sitting beside her friends. Calfy, a friend of hers, said that their noon was quite boresome that she gave her friends a problem to solve. An ant-lover she is, she gave the following problem to her friends:
+
+There are n piles of holes on the ground. Each pile of holes has p_i ants in it at hour 0. For the next few hours, any of the five actions may occur:
+- a_i ants fill up pile b_i,
+- a_i ants fill up pile b_j to pile b_k (inclusive),
+- a_i ants leave pile b_i,
+- a_i ants leave pile b_j to pile b_k (inclusive),
+- The Queen ant asks you how many ants were in pile c_j to c_k, inclusive, at hour x.
+
+Kairi seems to not know how to solve this problem so she called you and asked for your help! Given n queries, return an integer m that answers the third query. Since this value may be very large, return the answer module 1000000007.
+
+
+mx = 100011
+st = [0 for i in range(mx*4)]
+
+def l(x):
+    return 2*x + 1
+
+def r(x):
+    return 2*x + 2
+
+def build(root, left, right, lst):
+    if left == right:
+        st[root] = lst[left]
+    else:
+        md = left + ((right-left)>>1)
+        build(l(root), left, md, lst)
+        build(r(root), md+1, right, lst)
+        st[root] = st[l(root)] + st[r(root)]
+        
+def update(root, left, right, val, ind):
+    if left == right:
+        st[left] = val
+    else:
+        md = left + ((right-left)>>1)
+        if ind > md:
+            update(r(root), md+1, right, val, ind)
+        else:
+            update(l(root), left, md, val, ind)
+        st[root] = st[l(root)] + st[r(root)]
+        
+def find(root, left, right, x, y):
+    if y < left or x > right:
+        return
+    if left <= x and y <= right:
+        return st[root]
+    md = left+((right-left)>>1)
+    find(l(root), left, md, x, y)
+    find(r(root), md+1, right, x, y)
+    return st[root]
+
+def solve(lst, queries, n):
+    build(0, 0, len(lst)-1, lst)
+    qt = []
+    for i in range(queries):
+        query = [int(i) for i in queries[i].split()]
+        if query[0] == 3:
+            qt.append((query[1],i))
+    qt.sort()
+    curi, cnt = 0, 0
+    ans = []
+    for i in range(queries):
+        query = [int(i) for i in queries[i].split()]
+        if query[0] != 3:
+            update(0, 0, len(lst)-1, query[2], query[1]*(-1 if query[0] == 2 else 1))
+        if i == qt[curi]:
+            ans.append(find(0,0,n-1,query[1], query[2]))
+            curi += 1
+    return ans
